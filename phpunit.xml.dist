@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="http://schema.phpunit.de/9.5/phpunit.xsd"
+         bootstrap="test/bootstrap.php"
+         backupGlobals="false"
+         colors="true"
+         convertDeprecationsToExceptions="false"
+>
+    <php>
+        <ini name="display_errors" value="1" />
+        <ini name="error_reporting" value="0" />
+        <env name="KERNEL_CLASS" value="App\Kernel" />
+        <env name="APP_ENV" value="local_test" force="true"/>
+
+        <!-- ###+ symfony/framework-bundle ### -->
+        <env name="APP_ENV" value="dev"/>
+        <env name="APP_SECRET" value="c305e641a7d1818c18229d3bc9cab34b"/>
+        <!-- ###- symfony/framework-bundle ### -->
+    </php>
+
+    <testsuites>
+        <testsuite name="functional">
+            <directory>test/functional</directory>
+        </testsuite>
+        <testsuite name="integrated">
+            <directory>test/integrated</directory>
+        </testsuite>
+        <testsuite name="unitary">
+            <directory>test/unitary</directory>
+        </testsuite>
+    </testsuites>
+
+    <coverage processUncoveredFiles="true">
+        <include>
+            <directory suffix=".php">src</directory>
+        </include>
+    </coverage>
+</phpunit>

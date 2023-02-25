@@ -1,0 +1,16 @@
+FROM //add your docker image here with redis and php containers
+
+# setup arguments
+ARG app_root_dir=/var/www/html
+
+# install extensions
+RUN pear config-set http_proxy $http_proxy_url \
+    && pecl install apcu redis \
+    && docker-php-ext-enable apcu redis \
+    && docker-php-ext-install opcache pdo_mysql sockets
+
+# add configuration files
+COPY config/docker/app-php.ini $PHP_INI_DIR/conf.d/app-php.ini
+
+# add application files
+COPY . $app_root_dir
