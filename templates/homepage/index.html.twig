@@ -6,15 +6,36 @@
 <style>
     .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
     .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
+    .bold {font-weight: bold}
+    .underline {text-decoration: underline}
+    .score {font-weight: bold; color: brown; font-size: larger }
+    .mb-2 {margin-bottom: 2px}
+    .game-title {color: #0d6efd; font-size: medium}
 </style>
 
-<div class="example-wrapper">
-    <h1>Hello {{ controller_name }}! ✅</h1>
 
-    This friendly message is coming from:
-    <ul>
-        <li>Your controller at <code><a href="{{ '/applications/sportradar/src/Controller/HomepageController.php'|file_link(0) }}">src/Controller/HomepageController.php</a></code></li>
-        <li>Your template at <code><a href="{{ '/applications/sportradar/templates/homepage/index.html.twig'|file_link(0) }}">templates/homepage/index.html.twig</a></code></li>
-    </ul>
+<div class="example-wrapper" style="border-bottom: 1px solid cornflowerblue">
+    <div class="row mb-3 text-center" style="font-size: small">
+        <div class="col-md-8 themed-grid-col">
+            <div class="pb-3 bold game-title">Romania - France</div>
+            <div class="row">
+                <div class="col-md-6 themed-grid-col bold underline">Home Team</div>
+                <div class="col-md-6 themed-grid-col bold underline">Away Team</div>
+            </div>
+            <div class="row">
+                <div class="col-md-6 themed-grid-col">Romania</div>
+                <div class="col-md-6 themed-grid-col">France</div>
+            </div>
+            <div class="row">
+                <div class="col-md-6 themed-grid-col score">2</div>
+                <div class="col-md-6 themed-grid-col score">0</div>
+            </div>
+        </div>
+        <div class="col-md-4 themed-grid-col">
+            <button type="button" class="w-100 btn btn-sm btn-outline-primary mb-2">Start</button>
+            <button type="button" class="w-100 btn btn-sm btn-outline-primary mb-2">Finish</button>
+            <button type="button" class="w-100 btn btn-sm btn-outline-primary">Update</button>
+        </div>
+    </div>
 </div>
 {% endblock %}
