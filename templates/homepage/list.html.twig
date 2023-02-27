@@ -15,6 +15,7 @@
 
 
 <div class="example-wrapper" style="border-bottom: 1px solid cornflowerblue">
+{#    {{ form_start(form, {'method': 'PATCH'}) }}#}
     <div class="row mb-3 text-center" style="font-size: small">
         <div class="col-md-8 themed-grid-col">
             <div class="pb-3 bold game-title">Romania - France</div>
@@ -37,5 +38,6 @@
             <button type="button" class="w-100 btn btn-sm btn-outline-primary">Update</button>
         </div>
     </div>
+{#    {{ form_end(form) }}#}
 </div>
 {% endblock %}

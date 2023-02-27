@@ -1,0 +1,41 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello GameController!{% endblock %}
+
+{% block body %}
+<style>
+    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
+    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
+</style>
+
+<div class="example-wrapper">
+    <div>
+        {{ form_start(form, {'method': 'POST'}) }}
+            <div class="my-custom-class-for-errors">
+                {{ form_errors(form) }}
+            </div>
+
+            <div class="row">
+                <div class="row">
+                    {{ form_row(form.homeTeam) }}
+                </div>
+                <div class="row">
+                    {{ form_row(form.awayTeam) }}
+                </div>
+                <div class="row">
+                    {{ form_row(form.homeTeamScore) }}
+                </div>
+                <div class="row">
+                    {{ form_row(form.awayTeamScore) }}
+                </div>
+                <div class="row">
+                    {{ form_row(form.isFinished) }}
+                </div>
+                <div class="row">
+                    {{ form_row(form.submit) }}
+                </div>
+            </div>
+        {{ form_end(form) }}
+    </div>
+</div>
+{% endblock %}

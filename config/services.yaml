@@ -34,4 +34,5 @@ services:
 
     App\Service\CacheService:
         arguments:
+            $redisProvider: '@app.redis_app_provider'
             $cacheAdapter: '@app.simple_cache'
