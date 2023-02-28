@@ -19,6 +19,9 @@ class CacheService
     ) {
     }
 
+    /**
+     * @throws CacheException
+     */
     public function persist(string $key, mixed $value): void
     {
         try {
@@ -26,35 +29,40 @@ class CacheService
             if (!$response) {
                 throw new CacheException('Error! Game was not saved!');
             }
-        } catch (\InvalidArgumentException $exception) {
+        } catch (InvalidArgumentException $exception) {
             $this->logger->warning($exception->getMessage());
             throw new CacheException('Error! Game was not saved!');
         }
     }
 
+    /**
+     * @throws CacheException
+     */
     public function fetch($key): mixed
     {
         try {
             return $this->cacheAdapter->get($key);
         } catch (InvalidArgumentException $exception) {
             $this->logger->warning($exception->getMessage());
+            throw new CacheException('Error! Game info could not be retrieved from storage!');
         }
-
-        return false;
     }
 
-    public function getAllKeys(): array
-    {
-        return $this->redisProvider->keys('*');
-    }
-
+    /**
+     * @throws CacheException
+     */
     public function fetchAll(array $keys): array
     {
         try {
             return $this->cacheAdapter->getMultiple($keys);
         } catch (InvalidArgumentException $exception) {
             $this->logger->warning($exception->getMessage());
+            throw new CacheException('Error! Games list info could not be retrieved from storage!');
         }
+    }
 
+    public function getAllKeys(): array
+    {
+        return $this->redisProvider->keys('*');
     }
 }

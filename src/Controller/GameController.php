@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Game;
+use App\Exception\CacheException;
 use App\Form\GameType;
 use App\Service\GameService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -13,6 +14,9 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class GameController extends AbstractController
 {
+    private const ADD_GAME_ERROR = 'There was an error while adding the game.';
+    private const UPDATE_GAME_ERROR = 'There was an error while updating the game.';
+
     public function __construct(private readonly GameService $gameService)
     {
     }
@@ -20,23 +24,14 @@ class GameController extends AbstractController
     #[Route('/add-game', name: 'add_game')]
     public function addGame(Request $request): Response
     {
-        $game = new Game();
-        $form = $this->createForm(GameType::class, $game);
+        $form = $this->createForm(GameType::class, new Game());
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            /** @var Game $formData */
-            $formData = $form->getData();
-            switch ($request->getMethod()) {
-                case 'POST':
-                    if(true === $this->gameService->addGame($formData)) {
-                        return $this->redirectToRoute('app_homepage');
-                    }
-                    $form->addError(new FormError('There was an error while adding the game'));
-                    break;
-                default:
-                    break;
+            if(true === $this->gameService->addGame($form->getData())) {
+                return $this->redirectToRoute('app_homepage');
             }
+            $form->addError(new FormError(self::ADD_GAME_ERROR));
         }
 
         return $this->render('game/add.html.twig', [
@@ -44,15 +39,43 @@ class GameController extends AbstractController
         ]);
     }
 
-    #[Route('/update-game', name: 'update_game')]
-    public function updateGame(Request $request): Response
+    #[Route('/update-game/{homeTeam}/{awayTeam}', name: 'update_game')]
+    public function updateGame(string $homeTeam, string $awayTeam, Request $request): Response
     {
-        $game = new Game();
-        $form = $this->createForm(GameType::class, $game);
+        $form = $this->createForm(GameType::class);
         $form->handleRequest($request);
 
-        return $this->render('game/add.html.twig', [
-            'form' => $form->createView(),
+        if ($form->isSubmitted() && $form->isValid()) {
+            if (true === $this->gameService->updateGame($form->getData())) {
+                return $this->redirectToRoute('app_homepage');
+            }
+            $form->addError(new FormError(self::UPDATE_GAME_ERROR));
+        }
+
+        try {
+            $game = $this->gameService->fetchGame($homeTeam, $awayTeam);
+            $form->setData($game);
+        } catch (CacheException $exception) {
+            $form->setData(new Game());
+            $form->addError(new FormError($exception->getMessage()));
+        }
+
+        return $this->render('game/update.html.twig', [
+            'form' => $form->createView()
         ]);
+    }
+
+    #[Route('/finish-game/{homeTeam}/{awayTeam}', name: 'finish_game')]
+    public function finishGame(string $homeTeam, string $awayTeam): Response
+    {
+        $error = '';
+
+        try {
+            $this->gameService->finishGame($homeTeam, $awayTeam);
+        } catch (CacheException $exception) {
+            $error = $exception->getMessage();
+        }
+
+        return $this->redirectToRoute('app_homepage', ['error' => $error]);
     }
 }
