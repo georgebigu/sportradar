@@ -39,7 +39,7 @@ class GameController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            if(true !== $this->gameService->addGame($form->getData())) {
+            if(true === $this->gameService->addGame($form->getData())) {
                 return $this->redirectToRoute('manage_games');
             }
             $form->addError(new FormError(self::ADD_GAME_ERROR));
@@ -61,14 +61,14 @@ class GameController extends AbstractController
                 return $this->redirectToRoute('manage_games');
             }
             $form->addError(new FormError(self::UPDATE_GAME_ERROR));
-        }
-
-        try {
-            $game = $this->gameService->fetchGame($homeTeam, $awayTeam);
-            $form->setData($game);
-        } catch (CacheException $exception) {
-            $form->setData(new Game());
-            $form->addError(new FormError($exception->getMessage()));
+        } else {
+            try {
+                $game = $this->gameService->fetchGame($homeTeam, $awayTeam);
+                $form->setData($game);
+            } catch (CacheException $exception) {
+                $form->setData(new Game());
+                $form->addError(new FormError($exception->getMessage()));
+            }
         }
 
         return $this->render('game/update.html.twig', [

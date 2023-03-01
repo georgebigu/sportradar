@@ -9,28 +9,42 @@
 </style>
 
 <div class="example-wrapper">
-    <div>
+    <div class="col-md-7 col-lg-8">
+        <h4 class="mb-3" style="color: #0d6efd">Add New Game</h4>
         {{ form_start(form) }}
             <div class="my-custom-class-for-errors">
                 {{ form_errors(form) }}
             </div>
-            <div class="row">
-                <div class="row">
+            <hr class="my-4">
+            <div class="row g-3">
+                <div class="col-sm-6">
                     {{ form_row(form.homeTeam) }}
                 </div>
-                <div class="row">
-                    {{ form_row(form.awayTeam) }}
-                </div>
-                <div class="row">
+                <div class="col-md-6">
                     {{ form_row(form.homeTeamScore) }}
                 </div>
-                <div class="row">
+            </div>
+            <hr class="my-4">
+            <div class="row g-3">
+                <div class="col-md-6">
+                    {{ form_row(form.awayTeam) }}
+                </div>
+                <div class="col-md-6">
                     {{ form_row(form.awayTeamScore) }}
                 </div>
-                <div class="row">
+            </div>
+            <hr class="my-4">
+            <div class="row g-3">
+                <div class="col-md-6">
                     {{ form_row(form.isFinished) }}
                 </div>
-                <div class="row">
+                <div class="col-md-6">
+                    {{ form_row(form.createdAt) }}
+                </div>
+            </div>
+            <hr class="my-4">
+            <div class="row g-3">
+                <div class="col-md-6">
                     {{ form_row(form.submit) }}
                 </div>
             </div>

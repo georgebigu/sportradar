@@ -8,33 +8,47 @@
     .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
 </style>
 
-<div class="example-wrapper">
-    <div>
-        {{ form_start(form) }}
+    <div class="example-wrapper">
+        <div class="col-md-7 col-lg-8">
+            <h4 class="mb-3" style="color: #0d6efd">Update Game</h4>
+            {{ form_start(form) }}
             <div class="my-custom-class-for-errors">
                 {{ form_errors(form) }}
             </div>
-            <div class="row">
-                <div class="row">
-                    {{ form_row(form.homeTeam) }}
+            <hr class="my-4">
+            <div class="row g-3">
+                <div class="col-sm-6">
+                    {{ form_row(form.homeTeam, {'attr':{'readonly':'true'}}) }}
                 </div>
-                <div class="row">
-                    {{ form_row(form.awayTeam) }}
-                </div>
-                <div class="row" style="">
+                <div class="col-md-6">
                     {{ form_row(form.homeTeamScore) }}
                 </div>
-                <div class="row">
+            </div>
+            <hr class="my-4">
+            <div class="row g-3">
+                <div class="col-md-6">
+                    {{ form_row(form.awayTeam, {'attr':{'readonly':'true'}}) }}
+                </div>
+                <div class="col-md-6">
                     {{ form_row(form.awayTeamScore) }}
                 </div>
-                <div class="row">
+            </div>
+            <hr class="my-4">
+            <div class="row g-3">
+                <div class="col-md-6">
                     {{ form_row(form.isFinished) }}
                 </div>
-                <div class="row">
+                <div class="col-md-6">
+                    {{ form_row(form.createdAt) }}
+                </div>
+            </div>
+            <hr class="my-4">
+            <div class="row g-3">
+                <div class="col-md-6">
                     {{ form_row(form.submit) }}
                 </div>
             </div>
-        {{ form_end(form) }}
+            {{ form_end(form) }}
+        </div>
     </div>
-</div>
 {% endblock %}

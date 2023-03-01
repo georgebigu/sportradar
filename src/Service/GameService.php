@@ -10,6 +10,8 @@ use App\Exception\CacheException;
 class GameService
 {
     private const GAME_CACHE_KEY_PREFIX = 'Game_Key_';
+    private const GAME_PERSIST_ADD_ACTION = 'add';
+    private const GAME_PERSIST_UPDATE_ACTION = 'update';
 
     public function __construct(private readonly CacheService $cacheService)
     {
@@ -17,34 +19,12 @@ class GameService
 
     public function addGame(Game $game): bool
     {
-        try {
-            $cacheKey = $this->buildCacheKey($game->getHomeTeam(), $game->getAwayTeam());
-            $exists = $this->cacheService->fetch($cacheKey);
-
-            if ($exists) {
-                return true;
-            }
-
-            $game->setTotalScore($game->getHomeTeamScore() + $game->getAwayTeamScore());
-            $this->cacheService->persist($cacheKey, $game);
-
-            return true;
-        } catch (CacheException $exception) {
-            return false;
-        }
+        return $this->persistGame($game, self::GAME_PERSIST_ADD_ACTION);
     }
 
     public function updateGame(Game $game): bool
     {
-        try {
-            $cacheKey = $this->buildCacheKey($game->getHomeTeam(), $game->getAwayTeam());
-            $game->setTotalScore($game->getHomeTeamScore() + $game->getAwayTeamScore());
-            $this->cacheService->persist($cacheKey, $game);
-
-            return true;
-        } catch (CacheException $exception) {
-            return false;
-        }
+        return $this->persistGame($game, self::GAME_PERSIST_UPDATE_ACTION);
     }
 
     /**
@@ -118,6 +98,27 @@ class GameService
         $game = $this->cacheService->fetch($cacheKey);
         $game->setIsFinished($status);
         $this->cacheService->persist($cacheKey, $game);
+    }
+
+    private function persistGame(Game $game, string $action): bool
+    {
+        try {
+            $cacheKey = $this->buildCacheKey($game->getHomeTeam(), $game->getAwayTeam());
+            $exists = $this->cacheService->fetch($cacheKey);
+            if ($exists && $action == self::GAME_PERSIST_ADD_ACTION) {
+                return true;
+            }
+            if (!$exists && $action == self::GAME_PERSIST_UPDATE_ACTION) {
+               return false;
+            }
+
+            $game->setTotalScore($game->getHomeTeamScore() + $game->getAwayTeamScore());
+            $this->cacheService->persist($cacheKey, $game);
+
+            return true;
+        } catch (CacheException $exception) {
+            return false;
+        }
     }
 
     private function buildCacheKey(string $keyPartOne, string $keyPartTwo): string
