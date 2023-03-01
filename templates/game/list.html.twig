@@ -1,7 +1,4 @@
 {% extends 'base.html.twig' %}
-
-{% block title %}Hello HomepageController!{% endblock %}
-
 {% block body %}
     <style>
         .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
@@ -13,7 +10,8 @@
         .game-title {color: #0d6efd; font-size: medium}
     </style>
 
+    <div class="pb-3 bold game-title" style="text-align: center; color: red">{{error}}</div>
     {% for game in games %}
-        {{ include('homepage/_game.html.twig') }}
+        {{ include('game/_game.html.twig') }}
     {% endfor %}
 {% endblock %}

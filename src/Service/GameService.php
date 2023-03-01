@@ -52,10 +52,15 @@ class GameService
      */
     public function finishGame(string $homeTeam, string $awayTeam): void
     {
-        $cacheKey = $this->buildCacheKey($homeTeam, $awayTeam);
-        $game = $this->cacheService->fetch($cacheKey);
-        $game->setIsFinished(true);
-        $this->cacheService->persist($cacheKey, $game);
+        $this->updateIsFinished($homeTeam, $awayTeam,true);
+    }
+
+    /**
+     * @throws CacheException
+     */
+    public function startGame(string $homeTeam, string $awayTeam): void
+    {
+        $this->updateIsFinished($homeTeam, $awayTeam,false);
     }
 
     /**
@@ -102,6 +107,17 @@ class GameService
         }
 
         return $keysList;
+    }
+
+    /**
+     * @throws CacheException
+     */
+    private function updateIsFinished(string $homeTeam, string $awayTeam, bool $status): void
+    {
+        $cacheKey = $this->buildCacheKey($homeTeam, $awayTeam);
+        $game = $this->cacheService->fetch($cacheKey);
+        $game->setIsFinished($status);
+        $this->cacheService->persist($cacheKey, $game);
     }
 
     private function buildCacheKey(string $keyPartOne, string $keyPartTwo): string

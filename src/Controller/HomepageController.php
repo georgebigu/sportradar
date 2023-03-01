@@ -12,15 +12,14 @@ class HomepageController extends AbstractController
     public function __construct(private readonly GameService $gameService) {
     }
 
-    #[Route('/{error}', name: 'app_homepage')]
-    public function index(string $error = ''): Response
+    #[Route('/', name: 'app_homepage')]
+    public function index(): Response
     {
         $gamesList = $this->gameService->getGamesList();
 
         return $this->render('homepage/list.html.twig', [
             'controller_name' => 'HomepageController',
-            'games'           => $gamesList,
-            'error'           => $error
+            'games'           => $gamesList
         ]);
     }
 }

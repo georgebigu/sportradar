@@ -1,9 +1,7 @@
+{% if game.isFinished == false %}
 <div class="example-wrapper" style="border-bottom: 1px solid cornflowerblue">
     <div class="row mb-3 text-center" style="font-size: small">
-        <div class="col-md-8 themed-grid-col">
             <div class="pb-3 bold game-title">{{game.homeTeam}} - {{game.awayTeam}}</div>
-            <div class="pb-3 bold">Total Game Points: {{game.totalScore}} / {{game.isFinished}}</div>
-{#            <div class="pb-3 bold">Game Start: {{game.createdAt}}</div>#}
             <div class="row">
                 <div class="col-md-6 themed-grid-col bold underline">Home Team ({{game.homeTeam}})</div>
                 <div class="col-md-6 themed-grid-col bold underline">Away Team ({{game.awayTeam}})</div>
@@ -12,16 +10,6 @@
                 <div class="col-md-6 themed-grid-col score">{{game.homeTeamScore}}</div>
                 <div class="col-md-6 themed-grid-col score">{{game.awayTeamScore}}</div>
             </div>
-        </div>
-        <div class="col-md-4 themed-grid-col">
-            <a href="{{ path('finish_game', {'homeTeam':game.homeTeam, 'awayTeam':game.awayTeam}) }}"
-               class="nav-link px-2 text-white">
-                <button type="button" class="w-100 btn btn-sm btn-outline-primary mb-2">Finish</button>
-            </a>
-            <a href="{{ path('update_game', {'homeTeam':game.homeTeam, 'awayTeam':game.awayTeam}) }}"
-                class="nav-link px-2 text-white">
-                <button type="button" class="w-100 btn btn-sm btn-outline-primary">Update</button>
-            </a>
-        </div>
     </div>
 </div>
+{% endif %}

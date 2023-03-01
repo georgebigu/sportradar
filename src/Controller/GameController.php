@@ -21,6 +21,17 @@ class GameController extends AbstractController
     {
     }
 
+    #[Route('/manage-games', name: 'manage_games')]
+    public function index(string $error = ''): Response
+    {
+        $gamesList = $this->gameService->getGamesList();
+
+        return $this->render('game/list.html.twig', [
+            'games'           => $gamesList,
+            'error'           => $error
+        ]);
+    }
+
     #[Route('/add-game', name: 'add_game')]
     public function addGame(Request $request): Response
     {
@@ -28,8 +39,8 @@ class GameController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            if(true === $this->gameService->addGame($form->getData())) {
-                return $this->redirectToRoute('app_homepage');
+            if(true !== $this->gameService->addGame($form->getData())) {
+                return $this->redirectToRoute('manage_games');
             }
             $form->addError(new FormError(self::ADD_GAME_ERROR));
         }
@@ -47,7 +58,7 @@ class GameController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             if (true === $this->gameService->updateGame($form->getData())) {
-                return $this->redirectToRoute('app_homepage');
+                return $this->redirectToRoute('manage_games');
             }
             $form->addError(new FormError(self::UPDATE_GAME_ERROR));
         }
@@ -69,13 +80,25 @@ class GameController extends AbstractController
     public function finishGame(string $homeTeam, string $awayTeam): Response
     {
         $error = '';
-
         try {
             $this->gameService->finishGame($homeTeam, $awayTeam);
         } catch (CacheException $exception) {
             $error = $exception->getMessage();
         }
 
-        return $this->redirectToRoute('app_homepage', ['error' => $error]);
+        return $this->redirectToRoute('manage_games', ['error' => $error]);
+    }
+
+    #[Route('/start-game/{homeTeam}/{awayTeam}', name: 'start_game')]
+    public function startGame(string $homeTeam, string $awayTeam): Response
+    {
+        $error = '';
+        try {
+            $this->gameService->startGame($homeTeam, $awayTeam);
+        } catch (CacheException $exception) {
+            $error = $exception->getMessage();
+        }
+
+        return $this->redirectToRoute('manage_games', ['error' => $error]);
     }
 }
