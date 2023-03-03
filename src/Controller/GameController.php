@@ -14,9 +14,6 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class GameController extends AbstractController
 {
-    private const ADD_GAME_ERROR = 'There was an error while adding the game.';
-    private const UPDATE_GAME_ERROR = 'There was an error while updating the game.';
-
     public function __construct(private readonly GameService $gameService)
     {
     }
@@ -39,10 +36,13 @@ class GameController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            if(true === $this->gameService->addGame($form->getData())) {
-                return $this->redirectToRoute('manage_games');
+            try {
+                if(true === $this->gameService->addGame($form->getData())) {
+                    return $this->redirectToRoute('manage_games');
+                }
+            } catch (CacheException $exception) {
+                $form->addError(new FormError($exception->getMessage()));
             }
-            $form->addError(new FormError(self::ADD_GAME_ERROR));
         }
 
         return $this->render('game/add.html.twig', [
@@ -57,10 +57,13 @@ class GameController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            if (true === $this->gameService->updateGame($form->getData())) {
-                return $this->redirectToRoute('manage_games');
+            try {
+                if (true === $this->gameService->updateGame($form->getData())) {
+                    return $this->redirectToRoute('manage_games');
+                }
+            } catch (CacheException $exception) {
+                $form->addError(new FormError($exception->getMessage()));
             }
-            $form->addError(new FormError(self::UPDATE_GAME_ERROR));
         } else {
             try {
                 $game = $this->gameService->fetchGame($homeTeam, $awayTeam);

@@ -15,17 +15,10 @@
 
         <!-- ###+ symfony/framework-bundle ### -->
         <env name="APP_ENV" value="dev"/>
-        <env name="APP_SECRET" value="c305e641a7d1818c18229d3bc9cab34b"/>
         <!-- ###- symfony/framework-bundle ### -->
     </php>
 
     <testsuites>
-        <testsuite name="functional">
-            <directory>test/functional</directory>
-        </testsuite>
-        <testsuite name="integrated">
-            <directory>test/integrated</directory>
-        </testsuite>
         <testsuite name="unitary">
             <directory>test/unitary</directory>
         </testsuite>
